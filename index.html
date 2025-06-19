@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UltraCompress Pro | Error-Free Image Tool</title>
+    <title>UltraCompress Pro | Complete Image Compressor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #E63946;
+            --secondary: #3A86FF;
             --dark: #0A0A0A;
             --light: #F1FAEE;
-            --accent: #3A86FF;
+            --accent: #FFBE0B;
         }
         * {
             margin: 0;
@@ -28,8 +29,13 @@
             max-width: 800px;
             margin: 0 auto;
         }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
         .upload-area {
-            border: 2px dashed var(--accent);
+            border: 2px dashed var(--secondary);
             border-radius: 10px;
             padding: 3rem;
             text-align: center;
@@ -51,6 +57,26 @@
             max-width: 100%;
             max-height: 300px;
             border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .file-info {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .controls {
+            margin: 1.5rem 0;
+        }
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input[type="range"] {
+            width: 100%;
         }
         button {
             background: var(--primary);
@@ -61,22 +87,49 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 1rem;
+            transition: all 0.3s ease;
         }
-        .file-info {
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .result {
+            display: none;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             margin-top: 1rem;
-            color: rgba(255,255,255,0.7);
+        }
+        .image-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        .savings {
+            color: var(--accent);
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: var(--primary); text-align: center;">
-            <i class="fas fa-compress-alt"></i> UltraCompress Pro
-        </h1>
+        <h1><i class="fas fa-compress-alt"></i> UltraCompress Pro</h1>
         
         <!-- Upload Area -->
         <div class="upload-area" id="uploadArea">
-            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--accent);"></i>
+            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary);"></i>
             <h3>Click to Upload Image</h3>
             <p>or drag and drop files here</p>
             <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp">
@@ -87,9 +140,48 @@
             <h3>Your Image</h3>
             <img id="imagePreview" class="image-preview">
             <div class="file-info" id="fileInfo"></div>
-            <button id="compressBtn" disabled>
+            
+            <!-- Controls -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="quality">Compression Quality: <span id="qualityValue">80</span>%</label>
+                    <input type="range" id="quality" min="10" max="100" value="80">
+                </div>
+                <div class="control-group">
+                    <label>Output Format:</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <label><input type="radio" name="format" value="original" checked> Original</label>
+                        <label><input type="radio" name="format" value="jpeg"> JPG</label>
+                        <label><input type="radio" name="format" value="png"> PNG</label>
+                        <label><input type="radio" name="format" value="webp"> WebP</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="compressBtn">
                 <i class="fas fa-compress-alt"></i> Compress Image
             </button>
+        </div>
+        
+        <!-- Results -->
+        <div class="result" id="result">
+            <h3>Compression Results</h3>
+            <div class="comparison">
+                <div class="image-box">
+                    <h4>Original</h4>
+                    <img id="originalPreview" class="image-preview">
+                    <div class="file-info" id="originalInfo"></div>
+                </div>
+                <div class="image-box">
+                    <h4>Compressed</h4>
+                    <img id="compressedPreview" class="image-preview">
+                    <div class="file-info" id="compressedInfo"></div>
+                    <div class="savings" id="savings"></div>
+                    <button id="downloadBtn">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -101,11 +193,26 @@
         const imagePreview = document.getElementById('imagePreview');
         const fileInfo = document.getElementById('fileInfo');
         const compressBtn = document.getElementById('compressBtn');
+        const qualitySlider = document.getElementById('quality');
+        const qualityValue = document.getElementById('qualityValue');
+        const result = document.getElementById('result');
+        const originalPreview = document.getElementById('originalPreview');
+        const originalInfo = document.getElementById('originalInfo');
+        const compressedPreview = document.getElementById('compressedPreview');
+        const compressedInfo = document.getElementById('compressedInfo');
+        const savings = document.getElementById('savings');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        // Variables
+        let originalFile = null;
+        let compressedBlob = null;
         
         // Event Listeners
         uploadArea.addEventListener('click', () => fileInput.click());
-        
         fileInput.addEventListener('change', handleFileSelect);
+        qualitySlider.addEventListener('input', updateQuality);
+        compressBtn.addEventListener('click', compressImage);
+        downloadBtn.addEventListener('click', downloadImage);
         
         // Drag and Drop
         uploadArea.addEventListener('dragover', (e) => {
@@ -115,13 +222,13 @@
         });
         
         uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = 'var(--accent)';
+            uploadArea.style.borderColor = 'var(--secondary)';
             uploadArea.style.background = 'transparent';
         });
         
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = 'var(--accent)';
+            uploadArea.style.borderColor = 'var(--secondary)';
             uploadArea.style.background = 'transparent';
             
             if (e.dataTransfer.files.length) {
@@ -129,7 +236,7 @@
             }
         });
         
-        // File Handling
+        // Functions
         function handleFileSelect(e) {
             const file = e.target.files[0];
             
@@ -146,10 +253,13 @@
                 return;
             }
             
+            originalFile = file;
+            
             // Display preview
             const reader = new FileReader();
             reader.onload = function(e) {
                 imagePreview.src = e.target.result;
+                originalPreview.src = e.target.result;
                 previewContainer.style.display = 'block';
                 
                 // Update file info
@@ -159,8 +269,21 @@
                     <p><strong>Type:</strong> ${file.type}</p>
                 `;
                 
-                // Enable compress button
-                compressBtn.disabled = false;
+                originalInfo.innerHTML = `
+                    <p><strong>Size:</strong> ${formatFileSize(file.size)}</p>
+                    <p><strong>Dimensions:</strong> <span id="originalDims">Loading...</span></p>
+                `;
+                
+                // Get original dimensions
+                const img = new Image();
+                img.onload = function() {
+                    document.getElementById('originalDims').textContent = 
+                        `${this.naturalWidth} × ${this.naturalHeight}`;
+                };
+                img.src = e.target.result;
+                
+                // Hide previous results
+                result.style.display = 'none';
                 
                 // Scroll to preview
                 previewContainer.scrollIntoView({ behavior: 'smooth' });
@@ -168,7 +291,101 @@
             reader.readAsDataURL(file);
         }
         
-        // Format file size
+        function updateQuality() {
+            qualityValue.textContent = qualitySlider.value;
+        }
+        
+        function compressImage() {
+            if (!originalFile) return;
+            
+            compressBtn.disabled = true;
+            compressBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Compressing...';
+            
+            const quality = qualitySlider.value / 100;
+            const format = document.querySelector('input[name="format"]:checked').value;
+            
+            setTimeout(() => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Set canvas dimensions
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        
+                        // Draw image
+                        ctx.drawImage(img, 0, 0, img.width, img.height);
+                        
+                        // Determine output format
+                        let mimeType;
+                        if (format === 'original') {
+                            mimeType = originalFile.type;
+                        } else {
+                            mimeType = `image/${format}`;
+                        }
+                        
+                        // Convert to blob
+                        canvas.toBlob(blob => {
+                            if (!blob) {
+                                alert('Compression failed. Please try again.');
+                                compressBtn.disabled = false;
+                                compressBtn.innerHTML = '<i class="fas fa-compress-alt"></i> Compress Image';
+                                return;
+                            }
+                            
+                            compressedBlob = blob;
+                            const url = URL.createObjectURL(blob);
+                            
+                            // Display compressed image
+                            compressedPreview.src = url;
+                            
+                            // Update compressed info
+                            compressedInfo.innerHTML = `
+                                <p><strong>Size:</strong> ${formatFileSize(blob.size)}</p>
+                                <p><strong>Dimensions:</strong> ${img.width} × ${img.height}</p>
+                            `;
+                            
+                            // Calculate savings
+                            const sizeReduction = 1 - (blob.size / originalFile.size);
+                            savings.textContent = `Saved ${formatFileSize(originalFile.size - blob.size)} (${Math.round(sizeReduction * 100)}% reduction)`;
+                            
+                            // Show results
+                            result.style.display = 'block';
+                            
+                            // Reset button
+                            compressBtn.disabled = false;
+                            compressBtn.innerHTML = '<i class="fas fa-compress-alt"></i> Compress Image';
+                            
+                            // Scroll to results
+                            result.scrollIntoView({ behavior: 'smooth' });
+                            
+                        }, mimeType, quality);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(originalFile);
+            }, 100);
+        }
+        
+        function downloadImage() {
+            if (!compressedBlob) return;
+            
+            const fileName = originalFile.name.replace(/\.[^/.]+$/, '');
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const extension = format === 'original' ? 
+                originalFile.name.split('.').pop().toLowerCase() : format;
+            
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(compressedBlob);
+            a.download = `${fileName}_compressed.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -176,11 +393,6 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-        
-        // Compression function
-        compressBtn.addEventListener('click', function() {
-            alert('Compression would happen here in the full version!\nThis demo only shows the upload functionality.');
-        });
     </script>
 </body>
 </html>
