@@ -3,590 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All-in-One Image Tool | Compress, Convert, Resize Images Online</title>
-    <meta name="description" content="Free online image tool for compression, conversion, resizing, and optimization. Supports JPG, PNG, WebP, GIF, SVG, BMP formats.">
-    <meta name="keywords" content="image compressor, image converter, photo resizer, optimize images, webp converter, jpg to png, png to jpg">
-    <meta name="author" content="ImageToolPro">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+    <title>Working Image Tool</title>
     <style>
-        :root {
-            --primary: #4285f4;
-            --success: #34a853;
-            --danger: #ea4335;
-            --warning: #fbbc05;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
         body {
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: #f5f7fa;
-        }
-        header {
-            background: white;
-            box-shadow: var(--shadow);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo i {
-            color: var(--danger);
-        }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-        .nav-links a {
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        main {
-            padding: 2rem 0;
-        }
-        .hero {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 2rem 1rem;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        .hero p {
-            color: var(--gray);
+            font-family: Arial, sans-serif;
             max-width: 800px;
-            margin: 0 auto 1.5rem;
-        }
-        .tool-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .tool-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 10px;
-        }
-        .tab-btn {
-            padding: 0.75rem 1.5rem;
-            background: var(--light);
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-        .tab-content {
-            display: none;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 2rem;
-        }
-        .tab-content.active {
-            display: block;
+            margin: 0 auto;
+            padding: 20px;
         }
         .upload-area {
-            border: 2px dashed var(--gray);
-            border-radius: var(--border-radius);
-            padding: 3rem 1rem;
+            border: 2px dashed #ccc;
+            padding: 30px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 1.5rem;
-        }
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(66, 133, 244, 0.05);
-        }
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        .upload-area h3 {
-            margin-bottom: 0.5rem;
-        }
-        .upload-area p {
-            color: var(--gray);
-        }
-        #file-input {
-            display: none;
-        }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .control-group label {
-            font-weight: 600;
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .slider-container input[type="range"] {
-            flex-grow: 1;
-            height: 8px;
-            -webkit-appearance: none;
-            background: var(--light);
-            border-radius: 4px;
-            outline: none;
-        }
-        .slider-container input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--primary);
-            border-radius: 50%;
+            margin: 20px 0;
             cursor: pointer;
         }
-        .slider-value {
-            min-width: 40px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--primary);
+        #preview {
+            max-width: 100%;
+            margin-top: 20px;
         }
-        .format-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .format-option {
-            flex: 1;
-            min-width: 100px;
-        }
-        .format-option input {
-            display: none;
-        }
-        .format-option label {
-            display: block;
-            padding: 0.75rem 1rem;
-            background: var(--light);
-            border-radius: var(--border-radius);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .format-option input:checked + label {
-            background: var(--primary);
-            color: white;
-        }
-        .btn {
-            background: var(--primary);
+        button {
+            background: #4285f4;
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
-            font-weight: 600;
+            padding: 10px 20px;
+            margin: 10px 0;
             cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .btn:hover {
-            background: #3367d6;
-            transform: translateY(-2px);
-        }
-        .btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            transform: none;
-        }
-        .btn-success {
-            background: var(--success);
-        }
-        .btn-success:hover {
-            background: #2d8e4a;
-        }
-        .btn-danger {
-            background: var(--danger);
-        }
-        .btn-danger:hover {
-            background: #d33426;
-        }
-        .result-container {
-            display: none;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--light);
-        }
-        .comparison {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        @media (min-width: 768px) {
-            .comparison {
-                flex-direction: row;
-            }
-        }
-        .image-box {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .image-preview {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: contain;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        .image-info {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-        }
-        .savings {
-            background: rgba(52, 168, 83, 0.1);
-            color: var(--success);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .ad-container {
-            margin: 2rem 0;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 1rem;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .ad-label {
-            font-size: 0.8rem;
-            color: var(--gray);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-        }
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-        .copyright {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
-        .spinner {
-            display: none;
-            width: 40px;
-            height: 40px;
-            margin: 0 auto;
-            border: 4px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary);
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .dimension-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .dimension-input {
-            flex: 1;
-            min-width: 120px;
-        }
-        .dimension-input input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-        }
-        .preset-sizes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .preset-btn {
-            padding: 0.5rem 1rem;
-            background: var(--light);
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        .preset-btn:hover {
-            background: #e2e6ea;
-        }
-        .aspect-ratio {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .aspect-ratio input {
-            width: 50px;
-            padding: 0.5rem;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            text-align: center;
-        }
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .tab-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-            .format-options {
-                flex-direction: column;
-            }
-            .format-option {
-                min-width: 100%;
-            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <i class="fas fa-image"></i>
-                    <span>ImageToolPro</span>
-                </div>
-                <div class="nav-links">
-                    <a href="#compressor">Compressor</a>
-                    <a href="#converter">Converter</a>
-                    <a href="#resizer">Resizer</a>
-                    <a href="#optimizer">Optimizer</a>
-                    <a href="#editor">Editor</a>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <h1>Simple Image Tool</h1>
+    
+    <div class="upload-area" id="uploadArea">
+        <p>Click to upload image</p>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+    </div>
+    
+    <div>
+        <label>Quality: <span id="qualityValue">80</span>%</label>
+        <input type="range" id="quality" min="0" max="100" value="80">
+    </div>
+    
+    <button id="compressBtn">Compress Image</button>
+    
+    <div id="result" style="display:none;">
+        <h3>Compressed Image:</h3>
+        <img id="preview" src="" alt="Compressed preview">
+        <a id="downloadLink" download><button>Download</button></a>
+    </div>
 
-    <main class="container">
-        <!-- Ad Container Top -->
-        <div class="ad-container">
-            <div>
-                <div class="ad-label">Advertisement</div>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                     data-ad-slot="YOUR_AD_SLOT_ID"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
+    <script>
+        document.getElementById('uploadArea').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
 
-        <div class="hero">
-            <h1>All-in-One Image Tool</h1>
-            <p>Compress, convert, resize, and optimize your images online for free. Supports JPG, PNG, WebP, GIF, SVG, and BMP formats.</p>
-        </div>
+        document.getElementById('quality').addEventListener('input', function() {
+            document.getElementById('qualityValue').textContent = this.value;
+        });
 
-        <div class="tool-container">
-            <div class="tool-tabs">
-                <button class="tab-btn active" data-tab="compressor">Compressor</button>
-                <button class="tab-btn" data-tab="converter">Converter</button>
-                <button class="tab-btn" data-tab="resizer">Resizer</button>
-                <button class="tab-btn" data-tab="optimizer">Optimizer</button>
-                <button class="tab-btn" data-tab="editor">Editor</button>
-            </div>
+        document.getElementById('compressBtn').addEventListener('click', function() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return alert('Please select an image first');
+            
+            const quality = document.getElementById('quality').value / 100;
+            compressImage(file, quality);
+        });
 
-            <!-- Image Compressor Tab -->
-            <div id="compressor" class="tab-content active">
-                <div class="upload-area" id="compressor-upload">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>Upload Your Image</h3>
-                    <p>Drag & drop your image here or click to browse</p>
-                    <p class="small">Supports: JPG, PNG, WebP, GIF, SVG, BMP (Max: 10MB)</p>
-                    <input type="file" id="compressor-file-input" accept="image/*">
-                </div>
-                
-                <div class="controls">
-                    <div class="control-group">
-                        <label for="compressor-quality">Compression Level</label>
-                        <div class="slider-container">
-                            <input type="range" id="compressor-quality" min="0" max="100" value="80">
-                            <span class="slider-value" id="compressor-quality-value">80%</span>
-                        </div>
-                    </div>
+        function compressImage(file, quality) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
                     
-                    <div class="control-group">
-                        <label>Output Format</label>
-                        <div class="format-options">
-                            <div class="format-option">
-                                <input type="radio" id="compressor-format-original" name="compressor-format" value="original" checked>
-                                <label for="compressor-format-original">Original</label>
-                            </div>
-                            <div class="format-option">
-                                <input type="radio" id="compressor-format-jpg" name="compressor-format" value="jpg">
-                                <label for="compressor-format-jpg">JPG</label>
-                            </div>
-                            <div class="format-option">
-                                <input type="radio" id="compressor-format-png" name="compressor-format" value="png">
-                                <label for="compressor-format-png">PNG</label>
-                            </div>
-                            <div class="format-option">
-                                <input type="radio" id="compressor-format-webp" name="compressor-format" value="webp">
-                                <label for="compressor-format-webp">WebP</label>
-                            </div>
-                        </div>
-                    </div>
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
                     
-                    <button id="compressor-btn" class="btn" disabled>
-                        <i class="fas fa-compress-alt"></i> Compress Image
-                    </button>
-                </div>
-                
-                <div class="spinner" id="compressor-spinner"></div>
-                
-                <div class="result-container" id="compressor-result">
-                    <div class="result-header">
-                        <h2>Compression Results</h2>
-                        <button id="compressor-new-btn" class="btn btn-danger">
-                            <i class="fas fa-redo"></i> New Image
-                        </button>
-                    </div>
-                    
-                    <div class="comparison">
-                        <div class="image-box">
-                            <h3>Original Image</h3>
-                            <img id="compressor-original-img" class="image-preview" src="" alt="Original image">
-                            <div class="image-info">
-                                <div class="info-row">
-                                    <span>File Name:</span>
-                                    <span id="compressor-original-name"></span>
-                                </div>
-                                <div class="info-row">
-                                    <span>Dimensions:</span>
-                                    <span id="compressor-original-dimensions"></span>
-                                </div>
-                                <div class="info-row">
-                                    <span>File Size:</span>
-                                    <span id="compressor-original-size"></span>
-                                </div>
-                                <div class="info-row">
-                                    <span>File Type:</span>
-                                    <span id="compressor-original-type"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="image-box">
-                            <h3>Compressed Image</h3>
-                            <img id="compressor-compressed-img" class="image-preview" src="" alt="Compressed image">
-                            <div class="image-info">
-                                <div class="info-row">
-                                    <span>File Name:</span>
-                                    <span id="compressor-compressed-name"></span>
-                                </div>
-                                <div class="info-row">
-                                    <span>Dimensions:</span
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        document.getElementById('preview').src = url;
+                        document.getElementById('downloadLink').href = url;
+                        document.getElementById('downloadLink').download = 'compressed_' + file.name;
+                        document.getElementById('result').style.display = 'block';
+                    }, file.type, quality);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
