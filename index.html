@@ -1,4 +1,94 @@
 <!DOCTYPE html>
+<html>
+<head>
+    <title>Image Compressor</title>
+    <style>
+        body { font-family: Arial; background: #121212; color: white; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .upload-box { border: 2px dashed #ff2d55; padding: 40px; text-align: center; margin: 30px 0; border-radius: 10px; }
+        button { background: #ff2d55; color: white; border: none; padding: 12px 25px; margin: 15px; border-radius: 5px; cursor: pointer; }
+        #preview { max-width: 100%; display: none; margin: 20px auto; }
+    </style>
+</head>
+<body>
+    <h1 style="color:#ff2d55;">PicCompress</h1>
+    
+    <div class="upload-box" id="dropArea">
+        <p>📁 इमेज यहां ड्रॉप करें या क्लिक करें</p>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+    </div>
+    
+    <div id="controls" style="display:none; text-align:center;">
+        <p>क्वालिटी: <input type="range" id="quality" min="10" max="100" value="80"> <span id="qualityValue">80%</span></p>
+        <button onclick="compress()">कंप्रेस करें</button>
+    </div>
+    
+    <img id="preview" src="" alt="Compressed Image">
+    <button id="downloadBtn" style="display:none;" onclick="download()">डाउनलोड करें</button>
+
+    <script>
+        // File Select
+        document.getElementById('fileInput').addEventListener('change', function() {
+            document.getElementById('controls').style.display = 'block';
+        });
+        
+        // Drag & Drop
+        const dropArea = document.getElementById('dropArea');
+        dropArea.addEventListener('click', () => document.getElementById('fileInput').click());
+        dropArea.addEventListener('dragover', (e) => e.preventDefault());
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            document.getElementById('fileInput').files = e.dataTransfer.files;
+            document.getElementById('controls').style.display = 'block';
+        });
+        
+        // Quality Slider
+        document.getElementById('quality').addEventListener('input', function() {
+            document.getElementById('qualityValue').textContent = this.value + '%';
+        });
+        
+        // Compression Function
+        function compress() {
+            const file = document.getElementById('fileInput').files[0];
+            const quality = document.getElementById('quality').value / 100;
+            
+            if (!file) return alert("पहले इमेज चुनें");
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const compressed = canvas.toDataURL('image/jpeg', quality);
+                    document.getElementById('preview').src = compressed;
+                    document.getElementById('preview').style.display = 'block';
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    
+                    window.compressedImg = compressed;
+                    window.imgName = 'compressed_'+file.name;
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+        
+        // Download
+        function download() {
+            const link = document.createElement('a');
+            link.href = window.compressedImg;
+            link.download = window.imgName;
+            link.click();
+        }
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
